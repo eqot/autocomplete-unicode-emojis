@@ -1,0 +1,27 @@
+{
+  "name": "autocomplete-unicode-emojis",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "description": "Adds unicode emoji autocompletion to autocomplete+",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eqot/autocomplete-unicode-emojis"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.189.0"
+  },
+  "dependencies": {
+    "fuzzaldrin": "^2.1.0"
+  },
+  "devDependencies": {
+    "request": "^2.54.0"
+  },
+  "providedServices": {
+    "autocomplete.provider": {
+      "versions": {
+        "2.0.0": "getProvider"
+      }
+    }
+  }
+}
