@@ -5,6 +5,7 @@ fuzzaldrin = require('fuzzaldrin')
 module.exports =
   selector: '*'
 
+  wordRegex: /[\w\d_\+-]+$/
   properties: {}
   keys: []
 
@@ -15,12 +16,18 @@ module.exports =
       @properties = JSON.parse(content)
       @keys = Object.keys(@properties)
 
-  getSuggestions: ({prefix}) ->
+  getSuggestions: ({editor, bufferPosition}) ->
+    prefix = @getPrefix(editor, bufferPosition)
     return unless prefix?.length
 
     words = fuzzaldrin.filter(@keys, prefix)
     for word in words
       {
         text: @properties[word].emoji
+        replacementPrefix: prefix
         rightLabel: word
       }
+
+  getPrefix: (editor, bufferPosition) ->
+    line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition])
+    line.match(@wordRegex)?[0] or ''
