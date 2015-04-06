@@ -18,7 +18,7 @@ module.exports =
 
   getSuggestions: ({editor, bufferPosition}) ->
     prefix = @getPrefix(editor, bufferPosition)
-    return unless prefix?.length
+    return [] unless prefix?.length
 
     words = fuzzaldrin.filter(@keys, prefix)
     for word in words
