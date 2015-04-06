@@ -1,4 +1,4 @@
-# autocomplete+ unicode emojis suggestions
+# autocomplete+ unicode emojis suggestions [![Build Status](https://travis-ci.org/eqot/autocomplete-unicode-emojis.svg?branch=master)](https://travis-ci.org/eqot/autocomplete-unicode-emojis)
 
 Adds unicode emoji autocompletion to autocomplete-plus.
 
