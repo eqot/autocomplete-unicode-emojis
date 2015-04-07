@@ -30,29 +30,33 @@ describe "Unicode emojis autocompletions", ->
       editor.setText('')
       expect(getCompletions().length).toBe 0
 
-    it "returns no completions with an invalid prefix", ->
-      editor.setText('*')
+    it "returns no completions with an improper prefix", ->
+      editor.setText(':')
       editor.setCursorBufferPosition([0, 0])
       expect(getCompletions().length).toBe 0
       editor.setCursorBufferPosition([0, 1])
       expect(getCompletions().length).toBe 0
 
-    it "autocompletes unicode emojis with a prefix", ->
+      editor.setText(':*')
+      editor.setCursorBufferPosition([0, 1])
+      expect(getCompletions().length).toBe 0
+
+    it "autocompletes unicode emojis with a proper prefix", ->
       editor.setText """
-        sm
+        :sm
       """
-      editor.setCursorBufferPosition([0, 2])
+      editor.setCursorBufferPosition([0, 3])
       completions = getCompletions()
       expect(completions.length).toBe 49
       expect(completions[0].text).toBe '😄'
-      expect(completions[0].replacementPrefix).toBe 'sm'
+      expect(completions[0].replacementPrefix).toBe ':sm'
       expect(completions[1].text).toBe '😏'
 
       editor.setText """
-        +
+        :+
       """
-      editor.setCursorBufferPosition([0, 1])
+      editor.setCursorBufferPosition([0, 2])
       completions = getCompletions()
       expect(completions.length).toBe 1
       expect(completions[0].text).toBe '👍'
-      expect(completions[0].replacementPrefix).toBe '+'
+      expect(completions[0].replacementPrefix).toBe ':+'
