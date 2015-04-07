@@ -3,7 +3,7 @@ path = require('path')
 fuzzaldrin = require('fuzzaldrin')
 
 module.exports =
-  selector: '*'
+  selector: '.source.gfm, .text.html, .text.plain, .comment, .string'
 
   wordRegex: /:[\w\d_\+-]+$/
   properties: {}

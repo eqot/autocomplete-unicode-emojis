@@ -1,3 +1,14 @@
+packagesToTest =
+  gfm:
+    name: 'language-gfm'
+    file: 'test.md'
+  HTML:
+    name: 'language-html'
+    file: 'test.html'
+  text:
+    name: 'language-text'
+    file: 'test.txt'
+
 describe "Unicode emojis autocompletions", ->
   [editor, provider] = []
 
@@ -21,42 +32,44 @@ describe "Unicode emojis autocompletions", ->
 
     waitsFor -> Object.keys(provider.properties).length > 0
 
-  describe "Text files", ->
-    beforeEach ->
-      waitsForPromise -> atom.workspace.open('test.txt')
-      runs -> editor = atom.workspace.getActiveTextEditor()
+  Object.keys(packagesToTest).forEach (packageLabel) ->
+    describe "#{packageLabel} files", ->
+      beforeEach ->
+        waitsForPromise -> atom.packages.activatePackage(packagesToTest[packageLabel].name)
+        waitsForPromise -> atom.workspace.open(packagesToTest[packageLabel].file)
+        runs -> editor = atom.workspace.getActiveTextEditor()
 
-    it "returns no completions without a prefix", ->
-      editor.setText('')
-      expect(getCompletions().length).toBe 0
+      it "returns no completions without a prefix", ->
+        editor.setText('')
+        expect(getCompletions().length).toBe 0
 
-    it "returns no completions with an improper prefix", ->
-      editor.setText(':')
-      editor.setCursorBufferPosition([0, 0])
-      expect(getCompletions().length).toBe 0
-      editor.setCursorBufferPosition([0, 1])
-      expect(getCompletions().length).toBe 0
+      it "returns no completions with an improper prefix", ->
+        editor.setText(':')
+        editor.setCursorBufferPosition([0, 0])
+        expect(getCompletions().length).toBe 0
+        editor.setCursorBufferPosition([0, 1])
+        expect(getCompletions().length).toBe 0
 
-      editor.setText(':*')
-      editor.setCursorBufferPosition([0, 1])
-      expect(getCompletions().length).toBe 0
+        editor.setText(':*')
+        editor.setCursorBufferPosition([0, 1])
+        expect(getCompletions().length).toBe 0
 
-    it "autocompletes unicode emojis with a proper prefix", ->
-      editor.setText """
-        :sm
-      """
-      editor.setCursorBufferPosition([0, 3])
-      completions = getCompletions()
-      expect(completions.length).toBe 49
-      expect(completions[0].text).toBe '😄'
-      expect(completions[0].replacementPrefix).toBe ':sm'
-      expect(completions[1].text).toBe '😏'
+      it "autocompletes unicode emojis with a proper prefix", ->
+        editor.setText """
+          :sm
+        """
+        editor.setCursorBufferPosition([0, 3])
+        completions = getCompletions()
+        expect(completions.length).toBe 49
+        expect(completions[0].text).toBe '😄'
+        expect(completions[0].replacementPrefix).toBe ':sm'
+        expect(completions[1].text).toBe '😏'
 
-      editor.setText """
-        :+
-      """
-      editor.setCursorBufferPosition([0, 2])
-      completions = getCompletions()
-      expect(completions.length).toBe 1
-      expect(completions[0].text).toBe '👍'
-      expect(completions[0].replacementPrefix).toBe ':+'
+        editor.setText """
+          :+
+        """
+        editor.setCursorBufferPosition([0, 2])
+        completions = getCompletions()
+        expect(completions.length).toBe 1
+        expect(completions[0].text).toBe '👍'
+        expect(completions[0].replacementPrefix).toBe ':+'
